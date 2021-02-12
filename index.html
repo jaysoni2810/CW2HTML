@@ -213,6 +213,18 @@
                         }, 
                         body: JSON.stringify(newOrder), // need to stringify the JSON object
                        }).then(response => response.json()).then(responseJSON => { console.log('Success:', responseJSON); });
+                       for (let index = 0; index < this.cart.length; index++) {
+                        id = this.cart[index]._id;
+                        spaces = this.cart[index].newSpaces;
+                        fetch('http://localhost:3000/collection/products/' +id, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type' : 'application/json',
+                            "Access-Control-Allow-Origin": "*",
+                        },
+                        body: JSON.stringify({"spaces":spaces}),
+                    });
+                    };
                 showCheckout(products) {
                     this.showProduct = this.showProduct ? false : true;
                 },
