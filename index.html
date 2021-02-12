@@ -163,15 +163,14 @@
                 }
             },
             created: function(){
-                 fetch('http://localhost:3000/collection/products').then(function(response) {
+                 fetch('https://cw2html.herokuapp.com/collection/products').then(function(response) {
                  console.log('Data is being fetched');
                        response.json().then(function(json){
                        webstore.products = json
                        console.log(json);
-                    });
-                            })},
+            });
+            })},
 
-          
             methods: {
                 removeCart(product) {
                     this.cart.splice(this.cart.indexOf(product), 1)
@@ -199,24 +198,33 @@
                     const obj = { lesson_id: product.id, Subject: product.name, Location: product.Location, Price: product.price, spaces: product.spaces}
                     this.final_order.push(obj)
                     product.newSpaces--;
-    
+                   
+                    
                 },
+                showCheckout(products) {
+                    this.showProduct = this.showProduct ? false : true;
+                },
+                canAddToCart(product) {
+                    return product.spaces > this.cartCount(product);
+                },
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////// cw2
                 insertOrder(order) {
                     const newOrder = {
                         name: this.order.name, phone: this.order.phone, product: this.final_order, spaces: this.order.spaces, Location: this.order.Location,
                     };
                     //set the url to your server and route
-                    fetch('http://localhost:3000/collection/order', {
+                    fetch('https://cw2html.herokuapp.com/collection/order', {
                         method: 'POST', // set the HTTP method as 'POST'
                         headers: {
                             'Content-Type': 'application/json', // set the data type as JSON  
                         }, 
                         body: JSON.stringify(newOrder), // need to stringify the JSON object
-                       }).then(response => response.json()).then(responseJSON => { console.log('Success:', responseJSON); });
-                       for (let index = 0; index < this.cart.length; index++) {
+
+                    }).then(response => response.json()).then(responseJSON => { console.log('Success:', responseJSON); });
+                    for (let index = 0; index < this.cart.length; index++) {
                         id = this.cart[index]._id;
                         spaces = this.cart[index].newSpaces;
-                        fetch('http://localhost:3000/collection/products/' +id, {
+                        fetch('https://cw2html.herokuapp.com/collection/products/' +id, {
                         method: 'PUT',
                         headers: {
                             'Content-Type' : 'application/json',
@@ -225,12 +233,7 @@
                         body: JSON.stringify({"spaces":spaces}),
                     });
                     };
-                showCheckout(products) {
-                    this.showProduct = this.showProduct ? false : true;
-                },
-                canAddToCart(product) {
-                    return product.spaces > this.cartCount(product);
-                }, 
+                    //alert("YOUR ORDER HAS BEEN SUBMITTED ✔️");
                 },
                 cartCount(id) {
                     let count = 0;
@@ -263,7 +266,6 @@
                 },
             },
         })
-    
     </script>
 </body>
 </html>
